@@ -15,7 +15,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "parse": "node src/parseCSV.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -31,5 +32,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "csvtojson": "^2.0.10",
+    "lodash": "^4.17.15"
   }
 }
