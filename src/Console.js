@@ -1,11 +1,13 @@
-import React from 'react';
+import React from "react";
+import data from "./data.json";
 import styles from "./Console.module.css";
 
-export default function Console({currentBarrio}) {
+export default function Console({ currentBarrio }) {
   return (
     <div className={styles.console}>
-      Console
-      <h1>{currentBarrio}</h1>
+      <h1>
+        {data[currentBarrio] && data[currentBarrio]["2014"][0]["Nom_Barri"]}
+      </h1>
     </div>
-  )
+  );
 }

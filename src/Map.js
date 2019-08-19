@@ -32,7 +32,7 @@ export default function Map({ setCurrentBarrio }) {
             .attr("class", "country")
             .attr("d", getPath)
             .on("mouseover", function(d) {
-              setCurrentBarrio(d.properties.NOM);
+              setCurrentBarrio(d.properties.BARRI);
             });
         },
         update => {

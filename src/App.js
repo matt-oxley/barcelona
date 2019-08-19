@@ -7,13 +7,13 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentBarrio: null
+      currentBarrio: ""
     };
     this.setCurrentBarrio = this.setCurrentBarrio.bind(this);
   }
   setCurrentBarrio(key) {
     this.setState({
-      currentBarrio: key
+      currentBarrio: parseInt(key)
     });
   }
 
