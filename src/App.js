@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import Map from "./Map";
+import Console from "./Console";
+import styles from "./App.module.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      currentBarrio: null
+    }
+    this.setCurrentBarrio = this.setCurrentBarrio.bind(this)
+  }
+  setCurrentBarrio(key) {
+    console.log('hi', key)
+    this.setState({
+      currentBarrio: key
+    })
+  }
+  componentDidMount() {
+    this.resizeListener();
+    window.addEventListener("resize", this.resizeListener);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.resizeListener);
+  }
+  resizeListener = () => {
+    this.forceUpdate();
+  };
+  render() {
+    console.log('yo', this.state.currentBarrio)
+    return (
+      <div className={styles.wrap}>
+        <Map setCurrentBarrio={this.setCurrentBarrio}/>
+        <Console currentBarrio={this.state.currentBarrio}/>
+      </div>
+    );
+  }
 }
 
 export default App;
