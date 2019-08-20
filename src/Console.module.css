@@ -1,6 +1,6 @@
 .console {
   flex-grow: 1;
   flex-shrink: 0;
-  background: rgb(109, 109, 141);
+  background: #eaeaee;
   min-height: 400px;
 }

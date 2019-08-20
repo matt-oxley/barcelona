@@ -20,3 +20,7 @@
 .map :global .country:hover {
   fill: pink;
 }
+
+.map h1 {
+  position: absolute;
+}
