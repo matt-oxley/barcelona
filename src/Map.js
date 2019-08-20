@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { geoTransverseMercator, geoPath, scaleLinear, schemeBlues } from "d3";
+import { geoTransverseMercator, geoPath, scaleLinear } from "d3";
+import Slider from "@material-ui/core/Slider";
 import { values, flatten } from "lodash";
 import useD3 from "./useD3";
 import json from "./barris.json";
@@ -45,10 +46,11 @@ const transitionDelay = 1000;
 
 export default function Map({ setCurrentBarrio }) {
   const [currentTimeIndex, setCurrentTimeIndex] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const currentTime = times[currentTimeIndex];
   useEffect(() => {
     let interval = setInterval(() => {
-      setCurrentTimeIndex((currentTimeIndex + 1) % times.length);
+      !dragging && setCurrentTimeIndex((currentTimeIndex + 1) % times.length);
     }, transitionDelay);
     return () => clearInterval(interval);
   });
@@ -113,7 +115,28 @@ export default function Map({ setCurrentBarrio }) {
 
   return (
     <div className={styles.map}>
-      <h1>{`${currentTime[0]} - Trimester: ${currentTime[1]}`}</h1>
+      <div className={styles.sliderWrapper}>
+        <Slider
+          valueLabelDisplay={"off"}
+          step={null}
+          orientation="vertical"
+          value={currentTimeIndex}
+          aria-labelledby="vertical-slider"
+          onChange={(ev, val) => {
+            setDragging(true);
+            setCurrentTimeIndex(val);
+          }}
+          onChangeCommitted={() => setDragging(false)}
+          max={times.length}
+          getAriaValueText={i =>
+            `Year: ${times[i][0]}, Trimestre: ${times[i][1]}`
+          }
+          marks={times.map((t, i) => ({
+            value: i,
+            label: `Year: ${t[0]}, Trimestre: ${t[1]}`
+          }))}
+        />
+      </div>
       <svg ref={ref} />
     </div>
   );

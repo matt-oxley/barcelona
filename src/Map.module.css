@@ -14,7 +14,7 @@
 }
 
 .map path {
-  stroke: black;
+  stroke: transparent;
 }
 
 .map :global .country:hover {
@@ -23,4 +23,18 @@
 
 .map h1 {
   position: absolute;
+}
+
+.sliderWrapper {
+  height: calc(100% - 100px);
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 50px 0px;
+  box-sizing: content-box;
+  z-index: 10;
+}
+
+.sliderWrapper :global .MuiSlider-markLabel {
+  visibility: hidden;
 }
