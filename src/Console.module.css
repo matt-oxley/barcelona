@@ -3,4 +3,24 @@
   flex-shrink: 0;
   background: #eaeaee;
   min-height: 400px;
+  padding: 50px;
+  position: relative;
+}
+
+.console h1 {
+  height: 50px;
+  margin: 0;
+}
+
+.chartWrapper {
+  height: calc(100% - 50px);
+  width: 100%;
+  margin: 0px auto;
+  position: relative;
+}
+
+.chartWrapper svg {
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }

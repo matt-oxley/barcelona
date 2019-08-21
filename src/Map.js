@@ -8,18 +8,22 @@ import data from "./data.json";
 
 import styles from "./Map.module.css";
 
-const prices = flatten(
-  values(data).map(years =>
-    flatten(
-      values(years).map(trimesters => trimesters.map(t => parseFloat(t.Preu)))
+const flattenPriceData = raw => {
+  return flatten(
+    values(raw).map(years =>
+      flatten(
+        values(years).map(trimesters => trimesters.map(t => parseFloat(t.Preu)))
+      )
     )
-  )
-).filter(n => !isNaN(n));
+  );
+};
 
-const maxPrice = Math.max(...prices);
-const minPrice = Math.min(...prices);
+const prices = flattenPriceData(data).filter(n => !isNaN(n));
 
-const times = [
+export const maxPrice = Math.max(...prices);
+export const minPrice = Math.min(...prices);
+
+export const times = [
   ["2014", "1"],
   ["2014", "2"],
   ["2014", "3"],
@@ -86,7 +90,10 @@ export default function Map({ setCurrentBarrio }) {
             .attr("class", "country")
             .attr("d", getPath)
             .on("mouseover", function(d) {
-              setCurrentBarrio(d.properties.BARRI);
+              setCurrentBarrio({
+                name: d.properties.NOM,
+                data: flatten(values(data[parseInt(d.properties.BARRI)]))
+              });
             })
             .transition()
             .duration(transitionDelay)
