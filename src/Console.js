@@ -29,37 +29,70 @@ export default function Console({ currentBarrio }) {
     root
       .selectAll(".axes")
       .data([null])
-      .join(enter => {
-        const g = enter.append("g");
-        g.attr("class", "axes");
-        g.append("g")
-          .attr("class", "yAxis")
-          .attr("transform", `translate(${margin.left} 0)`)
-          .call(axisLeft(y));
-        g.append("g")
-          .attr("class", "xAxis")
-          .attr("transform", `translate(0 ${height - margin.bottom})`)
-          .call(axisBottom(x))
-          .selectAll(".xAxis .tick text")
-          .call(function(t) {
-            t.each(function(d) {
-              // for each one
-              var self = select(this);
-              var s = self.text().split("-"); // get the text and split it
-              self.text(""); // clear it out
-              self
-                .append("tspan") // insert two tspans
-                .attr("x", 0)
-                .attr("dy", ".8em")
-                .text(s[0]);
-              self
-                .append("tspan")
-                .attr("x", 0)
-                .attr("dy", ".8em")
-                .text(s[1]);
+      .join(
+        enter => {
+          const g = enter.append("g");
+          g.attr("class", "axes");
+          g.append("g")
+            .attr("class", "yAxis")
+            .attr("transform", `translate(${margin.left} 0)`)
+            .call(axisLeft(y));
+          g.append("g")
+            .attr("class", "xAxis")
+            .attr("transform", `translate(0 ${height - margin.bottom})`)
+            .call(axisBottom(x))
+            .selectAll(".xAxis .tick text")
+            .call(function(t) {
+              t.each(function(d) {
+                // for each one
+                var self = select(this);
+                var s = self.text().split("-"); // get the text and split it
+                self.text(""); // clear it out
+                self
+                  .append("tspan") // insert two tspans
+                  .attr("x", 0)
+                  .attr("dy", ".8em")
+                  .text(s[0]);
+                self
+                  .append("tspan")
+                  .attr("x", 0)
+                  .attr("dy", ".8em")
+                  .text(s[1]);
+              });
             });
-          });
-      });
+        },
+        update => {
+          update
+            .select(".yAxis")
+            .transition()
+            .attr("transform", `translate(${margin.left} 0)`)
+            .call(axisLeft(y));
+
+          update
+            .select(".xAxis")
+            .attr("transform", `translate(0 ${height - margin.bottom})`)
+            .call(axisBottom(x))
+            .selectAll(".xAxis .tick text")
+            .call(function(t) {
+              t.each(function(d) {
+                // for each one
+                var self = select(this);
+                var s = self.text().split("-"); // get the text and split it
+                self.text(""); // clear it out
+                self
+                  .append("tspan") // insert two tspans
+                  .attr("x", 0)
+                  .attr("dy", ".8em")
+                  .text(s[0]);
+                self
+                  .append("tspan")
+                  .attr("x", 0)
+                  .attr("dy", ".8em")
+                  .text(s[1]);
+              });
+            });
+        }
+      );
 
     root
       .selectAll(".yLabel")
@@ -93,6 +126,39 @@ export default function Console({ currentBarrio }) {
           update
             .text(xLabel)
             .attr("transform", `translate(${width} ${height - 5})`)
+      );
+
+    root
+      .selectAll(".bar")
+      .data(currentBarrio.data || [])
+      .join(
+        enter => {
+          enter
+            .append("rect")
+            .attr("class", "bar")
+            .attr("height", d => y(parseFloat(d.Preu, 10)))
+            .attr("width", () => x.bandwidth())
+            .attr(
+              "transform",
+              d =>
+                `translate(${x(`${d.Any} - ${d.Trimestre}`)} ${height -
+                  margin.bottom -
+                  y(parseFloat(d.Preu, 10))})`
+            );
+        },
+        update => {
+          update
+            .transition()
+            .attr("height", d => y(parseFloat(d.Preu, 10)))
+            .attr("width", () => x.bandwidth())
+            .attr(
+              "transform",
+              d =>
+                `translate(${x(`${d.Any} - ${d.Trimestre}`)} ${height -
+                  margin.bottom -
+                  y(parseFloat(d.Preu, 10))})`
+            );
+        }
       );
   });
   return (
