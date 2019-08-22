@@ -73,6 +73,15 @@ export default function Map({ setCurrentBarrio }) {
 
     var getPath = geoPath().projection(projection);
 
+    root
+      .selectAll(".legend")
+      .data([null])
+      .join("rect")
+      .attr("class", "legend")
+      .attr("fill", "url(#svgGradient)")
+      .attr("stroke", "none")
+      .attr("transform", `translate(${size.width - 10} 0)`);
+
     var countriesGroup = root
       .selectAll("#map")
       .data([null])
@@ -124,7 +133,17 @@ export default function Map({ setCurrentBarrio }) {
     <div className={styles.map}>
       <div className={styles.sliderWrapper}>
         <Slider
-          valueLabelDisplay={"off"}
+          valueLabelDisplay={"on"}
+          valueLabelFormat={d =>
+            `${times[d][0]} \n ${
+              ["Jan-Mar", "Apr-Jun", "Jul-Sep", "Oct-Dec"][times[d][1] - 1]
+            }`
+          }
+          // ValueLabelComponent={props => {
+          //   console.log(props);
+          //   const d = props.value;
+          //   return <span>{`${times[d][0]} - ${times[d][1]}`}</span>;
+          // }}
           step={null}
           orientation="vertical"
           value={currentTimeIndex}
@@ -144,7 +163,14 @@ export default function Map({ setCurrentBarrio }) {
           }))}
         />
       </div>
-      <svg ref={ref} />
+      <svg ref={ref}>
+        <defs>
+          <linearGradient id="svgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style={{ stopColor: "red", stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: "blue", stopOpacity: 1 }} />
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
   );
 }
