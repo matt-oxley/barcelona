@@ -16,7 +16,7 @@ export default function Console({ currentBarrio }) {
     };
     const { height, width } = root.node().getBoundingClientRect();
     const x = scaleBand()
-      .padding(0.1)
+      .padding(0.4)
       .domain(timeValues)
       .range([margin.left, width - margin.right]);
     const y = scaleLinear()
@@ -163,9 +163,11 @@ export default function Console({ currentBarrio }) {
   });
   return (
     <div className={styles.console}>
-      <h1>{currentBarrioName}</h1>
       <div className={styles.chartWrapper}>
-        <svg ref={ref} />
+        <h1>{currentBarrioName}</h1>
+        <div className={styles.chart}>
+          <svg ref={ref} />
+        </div>
       </div>
     </div>
   );

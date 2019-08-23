@@ -19,9 +19,12 @@ class App extends Component {
 
   render() {
     return (
-      <div className={styles.wrap}>
-        <Map setCurrentBarrio={this.setCurrentBarrio} />
-        <Console currentBarrio={this.state.currentBarrio} />
+      <div className={styles.app}>
+        <h2>Barcelona Rental Price Explorer</h2>
+        <div className={styles.wrap}>
+          <Map setCurrentBarrio={this.setCurrentBarrio} />
+          <Console currentBarrio={this.state.currentBarrio} />
+        </div>
       </div>
     );
   }
