@@ -1,11 +1,11 @@
 .wrap {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100vh;
-  padding: 50px;
   box-sizing: border-box;
   margin: 0px auto;
-  background: #1a1515;
+  background: #30324c;
+  padding: 50px;
   color: white;
 }
 

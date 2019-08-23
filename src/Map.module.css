@@ -1,8 +1,10 @@
 .map {
-  flex-grow: 1;
+  flex-grow: 0;
   flex-shrink: 0;
   position: relative;
   min-height: 400px;
+  /* margin: 30px 50px; */
+  flex-basis: 50%;
 }
 
 .map svg {
@@ -13,11 +15,11 @@
 }
 
 .map path {
-  stroke: transparent;
+  stroke: transparent !important;
 }
 
 .map :global .country:hover {
-  fill: pink;
+  fill: #3f51b5;
 }
 
 .map h1 {
@@ -25,7 +27,6 @@
 }
 
 .map :global .legend {
-  height: 100%;
   width: 10px;
 }
 

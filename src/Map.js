@@ -23,6 +23,9 @@ const prices = flattenPriceData(data).filter(n => !isNaN(n));
 export const maxPrice = Math.max(...prices);
 export const minPrice = Math.min(...prices);
 
+const hiColor = "#7becac";
+const loColor = "#be5754";
+
 export const times = [
   ["2014", "1"],
   ["2014", "2"],
@@ -63,7 +66,7 @@ export default function Map({ setCurrentBarrio }) {
 
     const color = scaleLinear()
       .domain([minPrice, maxPrice])
-      .range(["blue", "red"]);
+      .range([loColor, hiColor]);
 
     const size = root.node().getBoundingClientRect();
     var projection = geoTransverseMercator().fitExtent(
@@ -80,7 +83,9 @@ export default function Map({ setCurrentBarrio }) {
       .attr("class", "legend")
       .attr("fill", "url(#svgGradient)")
       .attr("stroke", "none")
-      .attr("transform", `translate(${size.width - 10} 0)`);
+      .attr("alignment-baseline", "hanging")
+      .attr("height", "30%")
+      .attr("transform", `translate(${size.width - 10} ${size.height * 0.7})`);
 
     var countriesGroup = root
       .selectAll("#map")
@@ -166,8 +171,11 @@ export default function Map({ setCurrentBarrio }) {
       <svg ref={ref}>
         <defs>
           <linearGradient id="svgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style={{ stopColor: "red", stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: "blue", stopOpacity: 1 }} />
+            <stop offset="0%" style={{ stopColor: hiColor, stopOpacity: 1 }} />
+            <stop
+              offset="100%"
+              style={{ stopColor: loColor, stopOpacity: 1 }}
+            />
           </linearGradient>
         </defs>
       </svg>
