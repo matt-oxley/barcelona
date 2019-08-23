@@ -20,7 +20,6 @@
 
 .chartWrapper {
   height: 100%;
-  width: 100%;
   margin: 0px auto;
   position: relative;
   padding: 30px 50px;
@@ -46,4 +45,16 @@
 
 .chartWrapper :global .bar {
   fill: #acb6ec;
+}
+
+@media (max-width: 1500px) {
+  .console {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  .chartWrapper {
+    background: inherit;
+  }
 }

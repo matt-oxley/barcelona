@@ -38,3 +38,15 @@
 .wrap text {
   fill: white;
 }
+
+@media (max-width: 1500px) {
+  .wrap {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 800px) {
+  .wrap {
+    padding: 20px;
+  }
+}
