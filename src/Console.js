@@ -1,5 +1,13 @@
 import React from "react";
-import { scaleLinear, scaleBand, axisLeft, axisBottom, select } from "d3";
+import {
+  scaleLinear,
+  scaleBand,
+  axisLeft,
+  axisBottom,
+  select,
+  geoTransverseMercator,
+  geoPath
+} from "d3";
 import useD3 from "./useD3";
 import { times, maxPrice, minPrice } from "./Map";
 import styles from "./Console.module.css";
@@ -25,6 +33,32 @@ export default function Console({ currentBarrio }) {
 
     const yLabel = "Rental price (Euros / m2)";
     const xLabel = "Year (Trimestre)";
+    var projection = geoTransverseMercator().fitExtent(
+      [[20, 20], [width, height]],
+      currentBarrio.geom
+    );
+    const getMap = geoPath().projection(projection);
+
+    root
+      .selectAll(".map")
+      .data([currentBarrio.geom])
+      .join(
+        enter => {
+          enter
+            .append("g")
+            .attr("class", "map")
+            .append("path")
+            .attr("d", d => {
+              return getMap(d);
+            });
+        },
+        update => {
+          update
+            .select("path")
+            .transition()
+            .attr("d", getMap);
+        }
+      );
 
     root
       .selectAll(".axes")

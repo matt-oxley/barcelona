@@ -18,6 +18,16 @@
   margin-bottom: 10px;
 }
 
+.console :global .map {
+  fill: #232438;
+  stroke: transparent !important;
+  opacity: 0.7;
+}
+
+.console :global .map path {
+  stroke: transparent;
+}
+
 .chartWrapper {
   height: 100%;
   margin: 0px auto;

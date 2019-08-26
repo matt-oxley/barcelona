@@ -102,10 +102,13 @@ export default function Map({ setCurrentBarrio }) {
             .append("g")
             .append("path")
             .attr("class", "country")
-            .attr("d", getPath)
+            .attr("d", d => {
+              return getPath(d);
+            })
             .on("mouseover", function(d) {
               setCurrentBarrio({
                 name: d.properties.NOM,
+                geom: d,
                 data: flatten(values(data[parseInt(d.properties.BARRI)]))
               });
             })
