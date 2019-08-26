@@ -20,6 +20,7 @@
 
 .map :global .country:hover {
   fill: #3f51b5;
+  stroke: white !important;
 }
 
 .map h1 {

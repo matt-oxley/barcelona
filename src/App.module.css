@@ -7,6 +7,7 @@
   padding: 50px;
   flex-grow: 1;
   width: 100%;
+  background-image: linear-gradient(to right, #30324c, #1e1f2f);
 }
 
 .app > h2 {
@@ -24,7 +25,6 @@
 }
 
 .app {
-  background-image: linear-gradient(to right, #30324c, #1e1f2f);
   display: flex;
   flex-direction: column;
   height: 100vh;
