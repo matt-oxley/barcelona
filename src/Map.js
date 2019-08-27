@@ -7,6 +7,7 @@ import json from "./barris.json";
 import data from "./data.json";
 
 import styles from "./Map.module.css";
+import { joinSafe } from "upath";
 
 const flattenPriceData = raw => {
   return flatten(
@@ -24,6 +25,7 @@ export const maxPrice = Math.max(...prices);
 export const minPrice = Math.min(...prices);
 
 const hiColor = "#7becac";
+const midColor = "pink";
 const loColor = "#be5754";
 
 export const times = [
@@ -55,18 +57,18 @@ export default function Map({ setCurrentBarrio }) {
   const [currentTimeIndex, setCurrentTimeIndex] = useState(0);
   const [dragging, setDragging] = useState(false);
   const currentTime = times[currentTimeIndex];
-  useEffect(() => {
-    let interval = setInterval(() => {
-      !dragging && setCurrentTimeIndex((currentTimeIndex + 1) % times.length);
-    }, transitionDelay);
-    return () => clearInterval(interval);
-  });
+  // useEffect(() => {
+  //   let interval = setInterval(() => {
+  //     !dragging && setCurrentTimeIndex((currentTimeIndex + 1) % times.length);
+  //   }, transitionDelay);
+  //   return () => clearInterval(interval);
+  // });
   const ref = useD3(root => {
     console.log("rendering");
 
     const color = scaleLinear()
       .domain([minPrice, maxPrice])
-      .range([loColor, hiColor]);
+      .range([hiColor, loColor]);
 
     const size = root.node().getBoundingClientRect();
     var projection = geoTransverseMercator().fitExtent(
@@ -76,16 +78,60 @@ export default function Map({ setCurrentBarrio }) {
 
     var getPath = geoPath().projection(projection);
 
-    root
+    const legend = root
       .selectAll(".legend")
       .data([null])
-      .join("rect")
-      .attr("class", "legend")
-      .attr("fill", "url(#svgGradient)")
-      .attr("stroke", "none")
-      .attr("alignment-baseline", "hanging")
-      .attr("height", "30%")
-      .attr("transform", `translate(${size.width - 10} ${size.height * 0.7})`);
+      .join(
+        enter => {
+          const legend = enter.append("g").attr("class", "legend");
+          legend
+            .append("rect")
+            .attr("fill", "url(#svgGradient)")
+            .attr("stroke", "none")
+            .attr("alignment-baseline", "hanging")
+            .attr("height", "30%")
+            .attr(
+              "transform",
+              `translate(${size.width - 10} ${size.height * 0.7})`
+            );
+
+          legend
+            .append("text")
+            .attr("class", "upper")
+            .text(`> ${Math.floor(maxPrice)} euros/m2`)
+            .attr(
+              "transform",
+              `translate(${size.width - 15} ${size.height * 0.7})`
+            )
+            .attr("text-anchor", "end")
+            .attr("alignment-baseline", "hanging");
+
+          legend
+            .append("text")
+            .attr("class", "lower")
+            .text(`< ${Math.floor(minPrice)} euros/m2`)
+            .attr("transform", `translate(${size.width - 15} ${size.height})`)
+            .attr("text-anchor", "end");
+        },
+        update => {
+          const legend = update;
+          legend
+            .select("rect")
+            .attr(
+              "transform",
+              `translate(${size.width - 10} ${size.height * 0.7})`
+            );
+          legend
+            .select(".upper")
+            .attr(
+              "transform",
+              `translate(${size.width - 15} ${size.height * 0.7})`
+            );
+          legend
+            .select(".lower")
+            .attr("transform", `translate(${size.width - 15} ${size.height})`);
+        }
+      );
 
     var countriesGroup = root
       .selectAll("#map")

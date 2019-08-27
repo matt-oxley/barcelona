@@ -16,6 +16,9 @@ export default function Console({ currentBarrio }) {
   const currentBarrioName = currentBarrio.name;
   const ref = useD3(root => {
     const timeValues = times.map(t => `${t[0]} - ${t[1]}`);
+    console.log(timeValues);
+    const years = ["2014", "2015", "2016", "2017", "2018"];
+    const trimesters = ["1", "2", "3", "4"];
     const margin = {
       top: 20,
       right: 20,
@@ -24,41 +27,47 @@ export default function Console({ currentBarrio }) {
     };
     const { height, width } = root.node().getBoundingClientRect();
     const x = scaleBand()
-      .padding(0.4)
-      .domain(timeValues)
+      .padding(0.1)
+      .domain(years)
       .range([margin.left, width - margin.right]);
+
+    const x1 = scaleBand()
+      .padding(0.3)
+      .domain(trimesters)
+      .range([0, x.bandwidth()]);
+
     const y = scaleLinear()
       .domain([minPrice, maxPrice])
       .range([height - margin.bottom, margin.top]);
 
     const yLabel = "Rental price (Euros / m2)";
-    const xLabel = "Year (Trimestre)";
+    const xLabel = "";
     var projection = geoTransverseMercator().fitExtent(
       [[20, 20], [width, height]],
       currentBarrio.geom
     );
     const getMap = geoPath().projection(projection);
 
-    root
-      .selectAll(".map")
-      .data([currentBarrio.geom])
-      .join(
-        enter => {
-          enter
-            .append("g")
-            .attr("class", "map")
-            .append("path")
-            .attr("d", d => {
-              return getMap(d);
-            });
-        },
-        update => {
-          update
-            .select("path")
-            .transition()
-            .attr("d", getMap);
-        }
-      );
+    // root
+    //   .selectAll(".map")
+    //   .data([currentBarrio.geom])
+    //   .join(
+    //     enter => {
+    //       enter
+    //         .append("g")
+    //         .attr("class", "map")
+    //         .append("path")
+    //         .attr("d", d => {
+    //           return getMap(d);
+    //         });
+    //     },
+    //     update => {
+    //       update
+    //         .select("path")
+    //         .transition()
+    //         .attr("d", getMap);
+    //     }
+    //   );
 
     root
       .selectAll(".axes")
@@ -75,30 +84,11 @@ export default function Console({ currentBarrio }) {
             .attr("class", "xAxis")
             .attr("transform", `translate(0 ${height - margin.bottom})`)
             .call(axisBottom(x))
-            .selectAll(".xAxis .tick text")
-            .call(function(t) {
-              t.each(function(d) {
-                // for each one
-                var self = select(this);
-                var s = self.text().split("-"); // get the text and split it
-                self.text(""); // clear it out
-                self
-                  .append("tspan") // insert two tspans
-                  .attr("x", 0)
-                  .attr("dy", ".8em")
-                  .text(s[0]);
-                self
-                  .append("tspan")
-                  .attr("x", 0)
-                  .attr("dy", ".8em")
-                  .text(s[1]);
-              });
-            });
+            .selectAll(".xAxis .tick text");
         },
         update => {
           update
             .select(".yAxis")
-            .transition()
             .attr("transform", `translate(${margin.left} 0)`)
             .call(axisLeft(y));
 
@@ -106,25 +96,7 @@ export default function Console({ currentBarrio }) {
             .select(".xAxis")
             .attr("transform", `translate(0 ${height - margin.bottom})`)
             .call(axisBottom(x))
-            .selectAll(".xAxis .tick text")
-            .call(function(t) {
-              t.each(function(d) {
-                // for each one
-                var self = select(this);
-                var s = self.text().split("-"); // get the text and split it
-                self.text(""); // clear it out
-                self
-                  .append("tspan") // insert two tspans
-                  .attr("x", 0)
-                  .attr("dy", ".8em")
-                  .text(s[0]);
-                self
-                  .append("tspan")
-                  .attr("x", 0)
-                  .attr("dy", ".8em")
-                  .text(s[1]);
-              });
-            });
+            .selectAll(".xAxis .tick text");
         }
       );
 
@@ -164,34 +136,32 @@ export default function Console({ currentBarrio }) {
 
     root
       .selectAll(".bar")
-      .data(currentBarrio.data || [])
+      .data(
+        currentBarrio.data ? currentBarrio.data.filter(d => !isNaN(d.Preu)) : []
+      )
       .join(
         enter => {
           enter
             .append("rect")
             .attr("class", "bar")
             .attr("height", d => y(parseFloat(d.Preu, 10)))
-            .attr("width", () => x.bandwidth())
-            .attr(
-              "transform",
-              d =>
-                `translate(${x(`${d.Any} - ${d.Trimestre}`)} ${height -
-                  margin.bottom -
-                  y(parseFloat(d.Preu, 10))})`
-            );
+            .attr("width", () => x1.bandwidth())
+            .attr("x", d => x(d.Any))
+            .attr("y", d => {
+              return height - margin.bottom - y(parseFloat(d.Preu, 10));
+            })
+            .attr("transform", d => `translate(${x1(`${d.Trimestre}`)} 0)`);
         },
         update => {
           update
             .transition()
             .attr("height", d => y(parseFloat(d.Preu, 10)))
-            .attr("width", () => x.bandwidth())
-            .attr(
-              "transform",
-              d =>
-                `translate(${x(`${d.Any} - ${d.Trimestre}`)} ${height -
-                  margin.bottom -
-                  y(parseFloat(d.Preu, 10))})`
-            );
+            .attr("width", () => x1.bandwidth())
+            .attr("x", d => x(d.Any))
+            .attr("y", d => {
+              return height - margin.bottom - y(parseFloat(d.Preu, 10));
+            })
+            .attr("transform", d => `translate(${x1(`${d.Trimestre}`)} 0)`);
         }
       );
   });

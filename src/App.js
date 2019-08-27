@@ -7,10 +7,26 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentBarrio: {}
+      currentBarrio: {},
+      dialogOpen: false
     };
     this.setCurrentBarrio = this.setCurrentBarrio.bind(this);
+    this.openDialog = this.openDialog.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
   }
+
+  openDialog() {
+    this.setState({
+      dialogOpen: true
+    });
+  }
+
+  closeDialog() {
+    this.setState({
+      dialogOpen: false
+    });
+  }
+
   setCurrentBarrio(ob) {
     this.setState({
       currentBarrio: ob
@@ -20,7 +36,26 @@ class App extends Component {
   render() {
     return (
       <div className={styles.app}>
-        <h2>Barcelona Rental Price Explorer</h2>
+        {this.state.dialogOpen ? (
+          <div className={styles.dialog}>
+            <div className={styles.overlay} onClick={this.closeDialog}></div>
+            <div className={styles.box}>
+              <div className={styles.boxHeader}>
+                <span>About this visualisation</span>
+                <button className={styles.close} onClick={this.closeDialog}>
+                  X
+                </button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+        ) : null}
+        <div className={styles.header}>
+          <span>Barcelona Rental Price Explorer</span>
+          <button className={styles.more} onClick={this.openDialog}>
+            ?
+          </button>
+        </div>
         <div className={styles.wrap}>
           <Map setCurrentBarrio={this.setCurrentBarrio} />
           <Console currentBarrio={this.state.currentBarrio} />
